@@ -1,0 +1,13 @@
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\Data.dll.config
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\Data.dll
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\Data.pdb
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\EntityFramework.dll
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\EntityFramework.xml
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\ru\EntityFramework.resources.dll
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\obj\Debug\Data.csproj.CoreCompileInputs.cache
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\obj\Debug\Data.csproj.CopyComplete
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\obj\Debug\Data.dll
+C:\Users\mrdmi\source\repos\SteamCardsFarmer\Data\obj\Debug\Data.pdb
