@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtherTests", "Test\OtherTests.csproj", "{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamMarketAPI.Test", "SteamMarketAPI.Test\SteamMarketAPI.Test.csproj", "{7628D3F8-5707-45C3-BE04-59B04CA73E25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamAPI", "Data\SteamAPI.csproj", "{662E020C-0F06-4908-ABC7-1AC66EB83627}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamAPI", "SteamAPI\SteamAPI.csproj", "{662E020C-0F06-4908-ABC7-1AC66EB83627}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtherTests", "OtherTests\OtherTests.csproj", "{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7628D3F8-5707-45C3-BE04-59B04CA73E25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7628D3F8-5707-45C3-BE04-59B04CA73E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7628D3F8-5707-45C3-BE04-59B04CA73E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{662E020C-0F06-4908-ABC7-1AC66EB83627}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662E020C-0F06-4908-ABC7-1AC66EB83627}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{662E020C-0F06-4908-ABC7-1AC66EB83627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
