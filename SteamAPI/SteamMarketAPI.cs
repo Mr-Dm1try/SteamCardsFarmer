@@ -16,7 +16,7 @@ namespace SteamAPI {
         private static double syncRUB = 21.24;
         private static double OneUSDinRUB = syncRUB / syncUSD;
 
-        private static double incomeRatio = 0.8695652173913043;
+        private static double incomeRatio = 0.8695652173913043;     // Если умножить цену на это число, то отсеется комиссия ТП стима
 
         public List<SSGame> Games { get; set; }
 

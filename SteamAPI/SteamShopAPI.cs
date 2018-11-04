@@ -17,8 +17,8 @@ namespace SteamAPI {
             foreach (var entity in context.SSGames.ToList())                 
                 context.SSGames.Remove(entity);            
 
-            foreach (var game in SSParse(maxPrice))
-                context.SSGames.Add(game);
+            foreach (var game in SteamShopParse(maxPrice))
+                context.SSGames.Add(game.Value);
 
             context.SaveChanges();
         }
@@ -31,7 +31,7 @@ namespace SteamAPI {
                 throw new Exception("Database is empty!");
         }
 
-        private List<SSGame> SSParse(double maxPrice) {
+        private Dictionary<string, SSGame> SteamShopParse(double maxPrice) {
             var url = baseUrl;
             Dictionary<string, SSGame> games = new Dictionary<string, SSGame>();
 
@@ -79,13 +79,9 @@ namespace SteamAPI {
                             url = "end";
 
                 } while (currPrice <= maxPrice && url != "end");
-            }
-
-            List<SSGame> result = new List<SSGame>();
-            foreach (var game in games) 
-                result.Add(game.Value);
+            }           
             
-            return result;
+            return games;
         }
 
     }
