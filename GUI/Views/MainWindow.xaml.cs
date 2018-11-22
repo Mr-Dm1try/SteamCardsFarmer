@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Diagnostics;
+using System.Windows.Navigation;
 using GUI.ViewModels;
 
 namespace GUI.Views
@@ -12,6 +14,11 @@ namespace GUI.Views
         {
             InitializeComponent();
             DataContext = new MainViewModel();
+        }
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

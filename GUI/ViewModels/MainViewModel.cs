@@ -1,5 +1,9 @@
 ﻿using GUI.ViewModels.AuxiliaryClasses;
+using System;
 using System.ComponentModel;
+using System.Windows.Input;
+using System.Collections.Generic;
+using GUI.Models.Types;
 
 namespace GUI.ViewModels
 {
@@ -10,12 +14,62 @@ namespace GUI.ViewModels
         private double gameMaxPrice;
         public double GameMaxPrice
         {
-            get { return gameMaxPrice; }
+            get => gameMaxPrice;
             set
             {
                 gameMaxPrice = value;
                 OnPropertyChanged("GameMaxPrice");
             }
+        }
+        public List<SSGame> Games
+        {
+            get
+            {
+                if (marketAPI != null) return marketAPI.Games;
+                else return null;
+            }
+            set
+            {
+                marketAPI.Games = value;
+                OnPropertyChanged("Games");
+            }
+        }
+        public string ChanceString
+        {
+            get => "Шанс: ";
+
+        }
+        public MainViewModel()
+        {
+            gameMaxPrice = 0;
+            shopAPI = new SteamShopAPI();
+            FetchGamesCommand = new DelegateCommand(FetchGames, CanFetchGames);
+            CalculatePayoffChanceCommand = new DelegateCommand(CalculatePayoffChance, CanCalculatePayoffChance);
+        }
+        private void FetchGames(object obj)
+        {
+            shopAPI.ReloadGamesDB(gameMaxPrice);
+            marketAPI = new SteamMarketAPI(shopAPI.GetGames());
+            Comparison<SSGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
+            marketAPI.Games.Sort(gamesComparison);
+            Games = marketAPI.Games;
+        }
+        private void CalculatePayoffChance(object obj)
+        {
+            marketAPI.WeedOutGames();
+            Games = marketAPI.Games;
+        }
+        private bool CanFetchGames(object arg) => shopAPI != null && gameMaxPrice >= 0 ? true : false;
+        private bool CanCalculatePayoffChance(object arg) => marketAPI != null && marketAPI.Games.Count > 0 ? true : false;
+        public ICommand FetchGamesCommand
+        {
+            get;
+            private set;
+        }
+        public ICommand CalculatePayoffChanceCommand
+        {
+            get;
+            private set;
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

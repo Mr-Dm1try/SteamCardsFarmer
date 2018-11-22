@@ -9,7 +9,7 @@ using GUI.Models.Types;
 namespace GUI.ViewModels.AuxiliaryClasses {
     public class SteamShopAPI {
         private readonly SteamGamesContext context;
-        private readonly String baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
+        private readonly string baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
 
         public SteamShopAPI() => context = new SteamGamesContext();
 
