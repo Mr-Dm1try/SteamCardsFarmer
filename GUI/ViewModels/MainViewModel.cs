@@ -11,8 +11,9 @@ namespace GUI.ViewModels
     {
         private SteamMarketAPI marketAPI;
         private SteamShopAPI shopAPI;
-        private double gameMaxPrice;
-        public double GameMaxPrice
+        private string gameMaxPrice;
+        private double mxGamePrice;
+        public string GameMaxPrice
         {
             get => gameMaxPrice;
             set
@@ -41,14 +42,15 @@ namespace GUI.ViewModels
         }
         public MainViewModel()
         {
-            gameMaxPrice = 0;
+            gameMaxPrice = ""; mxGamePrice = 0;
             shopAPI = new SteamShopAPI();
             FetchGamesCommand = new DelegateCommand(FetchGames, CanFetchGames);
             CalculatePayoffChanceCommand = new DelegateCommand(CalculatePayoffChance, CanCalculatePayoffChance);
         }
         private void FetchGames(object obj)
         {
-            shopAPI.ReloadGamesDB(gameMaxPrice);
+            mxGamePrice = Convert.ToDouble(gameMaxPrice);
+            shopAPI.ReloadGamesDB(mxGamePrice);
             marketAPI = new SteamMarketAPI(shopAPI.GetGames());
             Comparison<SSGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
             marketAPI.Games.Sort(gamesComparison);
@@ -59,7 +61,7 @@ namespace GUI.ViewModels
             marketAPI.WeedOutGames();
             Games = marketAPI.Games;
         }
-        private bool CanFetchGames(object arg) => shopAPI != null && gameMaxPrice >= 0 ? true : false;
+        private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 ? true : false;
         private bool CanCalculatePayoffChance(object arg) => marketAPI != null && marketAPI.Games.Count > 0 ? true : false;
         public ICommand FetchGamesCommand
         {

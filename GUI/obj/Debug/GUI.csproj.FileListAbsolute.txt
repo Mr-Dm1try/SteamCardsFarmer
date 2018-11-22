@@ -17,11 +17,8 @@ D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\GUI.csproj.CoreCompil
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\GUI.csproj.CopyComplete
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\GUI.exe
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\GUI.pdb
-D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Debug\Xceed.Wpf.Toolkit.dll
-D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Debug\Xceed.Wpf.Toolkit.xml
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\Views\MainWindow.baml
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\Views\MainWindow.g.cs
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Debug\HtmlAgilityPack.dll
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Debug\HtmlAgilityPack.pdb
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Debug\HtmlAgilityPack.xml
-D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Debug\GUI_MarkupCompile.lref

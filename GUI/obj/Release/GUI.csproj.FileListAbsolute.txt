@@ -4,12 +4,10 @@ D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\GUI.pdb
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\EntityFramework.dll
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\EntityFramework.SqlServer.dll
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\HtmlAgilityPack.dll
-D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\Xceed.Wpf.Toolkit.dll
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\EntityFramework.xml
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\EntityFramework.SqlServer.xml
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\HtmlAgilityPack.pdb
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\HtmlAgilityPack.xml
-D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\Xceed.Wpf.Toolkit.xml
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\ru\EntityFramework.resources.dll
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\bin\Release\ru\EntityFramework.SqlServer.resources.dll
 D:\Projects\Repos\Mr-Dm1try\SteamCardsFarmer\GUI\obj\Release\GUI.csprojAssemblyReference.cache
