@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Steam Cards Farmer" 
-        Height="440" Width="640" 
+        Height="440" Width="607" 
         ResizeMode="CanMinimize">
     <Grid>
         <Button 
@@ -76,16 +76,15 @@
         <Image 
             x:Name="GameImage" 
             VerticalAlignment="Top" 
-            Margin="324,43,10,0" Height="100"
+            Margin="324,43,10,0" Height="126"
         />
-        <StackPanel HorizontalAlignment="Left" Height="124" Margin="324,148,0,0" VerticalAlignment="Top" Width="300" Orientation="Vertical" DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}">
-            <Label x:Name="GameTitleLabel" Content="{Binding Title}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="28"/>
-            <Label x:Name="GamePriceLabel" Content="{Binding Price}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="28"/>
-            <Label Height="28" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Left" Height="98" Margin="324,174,0,0" VerticalAlignment="Top" Width="267" Orientation="Vertical" DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}">
+            <Label x:Name="GameTitleLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="28">
                 <Hyperlink NavigateUri="{Binding Link}" RequestNavigate="Hyperlink_RequestNavigate">
-                    Перейти в магазин
+                    <TextBlock Text="{Binding Title}"/>
                 </Hyperlink>
             </Label>
+            <Label x:Name="GamePriceLabel" Content="{Binding Price}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="28"/>
         </StackPanel>
         <TextBox x:Name="GamePriceTextBox" Margin="245,10,0,0" TextWrapping="Wrap" Text="{Binding GameMaxPrice}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="74"/>
     </Grid>
