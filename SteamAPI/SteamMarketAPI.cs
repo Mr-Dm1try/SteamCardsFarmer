@@ -130,7 +130,7 @@ namespace SteamAPI {
         }
 
         private List<double> GetCardPrices(SSGame game, out int cardsCount) {
-            string url = baseUrl.Replace("*gameID*", game.Link.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0]);
+            string url = baseUrl.Replace("*gameID*", game.Key.ToString());
             List<double> cards = new List<double>();
 
             using (var client = new WebClient()) {
