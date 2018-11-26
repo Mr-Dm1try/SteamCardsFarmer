@@ -9,7 +9,7 @@ using GUI.Models.Types;
 namespace GUI.ViewModels.AuxiliaryClasses {
     public class SteamMarketAPI {
         private readonly SteamGamesContext context;
-        private readonly string baseUrl = "https://steamcommunity.com/market/search?category_753_Game[]=tag_app_*gameID*&category_753_cardborder[]=tag_cardborder_0&category_753_item_class[]=tag_item_class_2#p1_price_desc";
+        private readonly String baseUrl = "https://steamcommunity.com/market/search?category_753_Game[]=tag_app_*gameID*&category_753_cardborder[]=tag_cardborder_0&category_753_item_class[]=tag_item_class_2#p1_price_desc";
         
         //TODO: Currency synchronization 
         private static double syncUSD = 0.31;
@@ -130,7 +130,7 @@ namespace GUI.ViewModels.AuxiliaryClasses {
         }
 
         private List<double> GetCardPrices(SSGame game, out int cardsCount) {
-            string url = baseUrl.Replace("*gameID*", game.Link.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0]);
+            string url = baseUrl.Replace("*gameID*", game.Key.ToString());
             List<double> cards = new List<double>();
 
             using (var client = new WebClient()) {

@@ -7,14 +7,17 @@ using GUI.Models;
 using GUI.Models.Types;
 
 namespace GUI.ViewModels.AuxiliaryClasses {
-    public class SteamShopAPI {
+    public sealed class SteamShopAPI {
         private readonly SteamGamesContext context;
-        private readonly string baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
+        private readonly String baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
+        private readonly String baseImageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/*gameID*/header.jpg";
 
         public SteamShopAPI() => context = new SteamGamesContext();
 
+        /// <summary> Обновление таблицы с играми в БД </summary>
+        /// <param name="maxPrice"> Максимальная цена, до которой ищутся игры </param>
         public void ReloadGamesDB(double maxPrice) {
-            foreach (var entity in context.SSGames.ToList())                 
+            foreach (var entity in context.SSGames.ToList())                 //очищаем БД
                 context.SSGames.Remove(entity);            
 
             foreach (var game in SteamShopParse(maxPrice))
@@ -23,6 +26,7 @@ namespace GUI.ViewModels.AuxiliaryClasses {
             context.SaveChanges();
         }
 
+        /// <summary> Возвращает все игры из таблицы SSGames </summary>
         public List<SSGame> GetGames() {
             var result = context.SSGames.ToList();
             if (result.Count > 0)
@@ -46,9 +50,10 @@ namespace GUI.ViewModels.AuxiliaryClasses {
                     if (gameNodes == null)
                         continue;
                     foreach (var node in gameNodes) {
-                        var title = node.SelectSingleNode(@"div[2]/div[1]/span[@class = 'title']").InnerText;
-                        var price = node.SelectSingleNode(@"div[2]/div[4]/div[2]").InnerText;
-                        var href = node.GetAttributeValue(@"href", "error");
+                        var title = node.SelectSingleNode("div[2]/div[1]/span[@class = 'title']").InnerText;
+                        var price = node.SelectSingleNode("div[2]/div[4]/div[2]").InnerText;
+                        var href = node.GetAttributeValue("href", "error");
+                        var id = href.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0];
 
                         if (!price.Contains('.'))
                             continue;
@@ -56,10 +61,14 @@ namespace GUI.ViewModels.AuxiliaryClasses {
                         var arr = price.Split(new[] { "pСѓР±." }, StringSplitOptions.None);     //разбиение по подстроке "руб."
                         price = (arr.Count() > 2) ? arr[1] : arr[0];
 
+                        var image = baseImageUrl.Replace("*gameID*", id);
+
                         var game = new SSGame() {
+                            Key = Convert.ToInt32(id),
                             Title = title,
                             Price = double.Parse(price),
-                            Link = href
+                            Link = href,
+                            ImageUrl = image
                         };
                         currPrice = game.Price;
 
