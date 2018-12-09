@@ -66,8 +66,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\AuxiliaryClasses\DelegateCommand.cs" />
-    <Compile Include="ViewModels\AuxiliaryClasses\SteamMarketAPI.cs" />
-    <Compile Include="ViewModels\AuxiliaryClasses\SteamShopAPI.cs" />
+    <Compile Include="Models\API\SteamMarketAPI.cs" />
+    <Compile Include="Models\API\SteamShopAPI.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

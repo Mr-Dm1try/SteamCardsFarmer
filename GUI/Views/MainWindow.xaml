@@ -23,14 +23,53 @@
             VerticalAlignment="Bottom"
             Content="Рассчитать шанс получения прибыли" 
         />
-        <Label 
-            x:Name="MaxPriceLabel" 
+        <StackPanel Orientation="Vertical" Margin="10,10,0,10" HorizontalAlignment="Left" Width="309">
+            <StackPanel Orientation="Horizontal" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="309">
+                <Label 
+                    x:Name="MaxPriceLabel" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" 
+                    Width="152" Height="28" 
+                    Content="Максимальная цена игры"
+                />
+                <Rectangle Fill="White" Stroke="White" Width="83" HorizontalAlignment="Center"/>
+                <TextBox x:Name="GamePriceTextBox" TextWrapping="NoWrap" Text="{Binding GameMaxPrice}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="28" VerticalAlignment="Center" HorizontalAlignment="Center" Width="74"/>
+            </StackPanel>
+            <Rectangle Fill="White" Stroke="White" Width="309" Height="5" HorizontalAlignment="Center"/>
+            <ListBox
+            x:Name="GamesListBox" 
             HorizontalAlignment="Left" 
-            VerticalAlignment="Top" 
-            Margin="10,10,0,0" 
-            Width="152" Height="28" 
-            Content="Максимальная цена игры"
-        />
+            Width="309"
+            ItemsSource="{Binding Games}"
+            VerticalAlignment="Top" Height="304"
+            >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image
+                            Width="75" Height="25"
+                            Source="{Binding ImageUrl}"
+                            Grid.Column="0"
+                        ></Image>
+                            <Grid 
+                            Grid.Column="1" 
+                            Width="Auto" 
+                            HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                <TextBlock
+                                FontSize="12"
+                                FontWeight="Normal"
+                                Text="{Binding Title}"
+                            />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
         <Label 
             x:Name="ChanceLabel" 
             VerticalAlignment="Bottom"
@@ -41,40 +80,8 @@
             HorizontalContentAlignment="Center" 
             VerticalContentAlignment="Center" 
         />
-        <ListBox
-            x:Name="GamesListBox" 
-            HorizontalAlignment="Left" 
-            Margin="10,43,0,10" 
-            Width="309"
-            ItemsSource="{Binding Games, Mode = TwoWay}"
-        >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="75"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image
-                            Width="75" Height="25"
-                            Source="https://steamcdn-a.akamaihd.net/steam/apps/975110/header_russian.jpg"
-                            Grid.Column="0"
-                        ></Image>
-                        <Grid 
-                            Grid.Column="1" 
-                            Width="Auto" 
-                            HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                            <TextBlock
-                                FontSize="12"
-                                FontWeight="Normal"
-                                Text="{Binding Title}"
-                            />
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StackPanel HorizontalAlignment="Left" Height="229" Margin="324,43,0,0" VerticalAlignment="Top" Width="267" Orientation="Vertical" DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}">
+
+        <StackPanel Height="229" Margin="324,43,10,0" VerticalAlignment="Top" Orientation="Vertical" DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}">
             <Image 
                 x:Name="GameImage"
                 VerticalAlignment="Top" 
@@ -87,6 +94,6 @@
             </Label>
             <Label x:Name="GamePriceLabel" Content="{Binding Price}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="28"/>
         </StackPanel>
-        <TextBox x:Name="GamePriceTextBox" Margin="245,10,0,0" TextWrapping="Wrap" Text="{Binding GameMaxPrice}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="74"/>
+
     </Grid>
 </Window>

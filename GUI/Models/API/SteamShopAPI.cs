@@ -6,7 +6,8 @@ using HtmlAgilityPack;
 using GUI.Models;
 using GUI.Models.Types;
 
-namespace GUI.ViewModels.AuxiliaryClasses {
+namespace GUI.Models.API
+{
     public sealed class SteamShopAPI {
         private readonly SteamGamesContext context;
         private readonly String baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";

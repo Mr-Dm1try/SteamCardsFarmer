@@ -6,7 +6,7 @@ using HtmlAgilityPack;
 using GUI.Models;
 using GUI.Models.Types;
 
-namespace GUI.ViewModels.AuxiliaryClasses {
+namespace GUI.Models.API {
     public class SteamMarketAPI {
         private readonly SteamGamesContext context;
         private readonly String baseUrl = "https://steamcommunity.com/market/search?category_753_Game[]=tag_app_*gameID*&category_753_cardborder[]=tag_cardborder_0&category_753_item_class[]=tag_item_class_2#p1_price_desc";

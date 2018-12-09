@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Collections.Generic;
 using GUI.Models.Types;
+using GUI.Models.API;
 
 namespace GUI.ViewModels
 {
