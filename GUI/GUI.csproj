@@ -65,6 +65,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Migrations\201812091305179_Initial.cs" />
+    <Compile Include="Migrations\201812091305179_Initial.Designer.cs">
+      <DependentUpon>201812091305179_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AuxiliaryClasses\DelegateCommand.cs" />
     <Compile Include="Models\API\SteamMarketAPI.cs" />
     <Compile Include="Models\API\SteamShopAPI.cs" />
@@ -99,6 +104,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\201812091305179_Initial.resx">
+      <DependentUpon>201812091305179_Initial.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
