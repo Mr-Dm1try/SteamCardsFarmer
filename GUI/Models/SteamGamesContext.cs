@@ -12,6 +12,7 @@
         // в файле конфигурации приложения.
         public SteamGamesContext()
             : base("name=SteamGamesContext") {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SteamGamesContext, GUI.Migrations.Configuration>());
         }
 
         // Добавьте DbSet для каждого типа сущности, который требуется включить в модель. Дополнительные сведения 
@@ -19,5 +20,9 @@
 
         public virtual DbSet<SSGame> SSGames { get; set; }
         public virtual DbSet<SMGameAndCards> SMGamesWithCards { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

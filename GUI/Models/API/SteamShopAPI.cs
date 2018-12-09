@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using HtmlAgilityPack;
-using GUI.Models;
 using GUI.Models.Types;
 
 namespace GUI.Models.API
