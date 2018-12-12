@@ -9,8 +9,8 @@ namespace GUI.Models.API
 {
     public sealed class SteamShopAPI {
         private readonly SteamGamesContext context;
-        private readonly String baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
-        private readonly String baseImageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/*gameID*/header.jpg";
+        private readonly string baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
+        private readonly string baseImageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/*gameID*/header.jpg";
 
         public SteamShopAPI() => context = new SteamGamesContext();
 

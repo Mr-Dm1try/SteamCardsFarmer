@@ -6,9 +6,9 @@ namespace GUI.Models.Types
     public class SSGame {
         [Key]
         public int Key { get; set; }        
-        public String Title { get; set; }
-        public Double Price { get; set; }
-        public String Link { get; set; }
-        public String ImageUrl { get; set; }
+        public string Title { get; set; }
+        public double Price { get; set; }
+        public string Link { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

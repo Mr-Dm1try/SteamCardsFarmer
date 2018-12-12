@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Markup;
+using System.Globalization;
 
 namespace GUI
 {
@@ -7,6 +9,9 @@ namespace GUI
     /// </summary>
     public partial class App : Application
     {
-
+        static App()
+        {
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+        }
     }
 }
