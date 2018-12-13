@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using HtmlAgilityPack;
-using GUI.Models.Types;
 
-namespace GUI.Models.API
-{
+using HtmlAgilityPack;
+
+using SteamCardsFarmer.Model.Types;
+
+namespace SteamCardsFarmer.Model.API {
     public sealed class SteamShopAPI {
         private readonly SteamGamesContext context;
         private readonly string baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
@@ -32,7 +33,7 @@ namespace GUI.Models.API
             if (result.Count > 0)
                 return result;
             else
-                throw new Exception("Database is empty!");
+                throw new ObjectDisposedException("Database is empty!");
         }
 
         private Dictionary<string, SSGame> SteamShopParse(double maxPrice) {
@@ -55,22 +56,23 @@ namespace GUI.Models.API
                         var href = node.GetAttributeValue("href", "error");
                         var id = href.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0];
 
-                        if (!price.Contains('.'))
+                        if (!price.Contains('.') || href.Contains("/sub/"))     // обход бесплатных игр и паков
                             continue;
 
                         var arr = price.Split(new[] { "pСѓР±." }, StringSplitOptions.None);     //разбиение по подстроке "руб."
-                        price = (arr.Count() > 2) ? arr[1] : arr[0];
+                        currPrice = double.Parse((arr.Count() > 2) ? arr[1] : arr[0]);
+                        if (currPrice > maxPrice)
+                            break;
 
                         var image = baseImageUrl.Replace("*gameID*", id);
 
                         var game = new SSGame() {
                             Key = Convert.ToInt32(id),
                             Title = title,
-                            Price = double.Parse(price),
+                            Price = currPrice,
                             Link = href,
                             ImageUrl = image
                         };
-                        currPrice = game.Price;
 
                         try {
                             games.Add(game.Title, game);

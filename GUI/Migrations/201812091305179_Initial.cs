@@ -1,4 +1,4 @@
-namespace GUI.Migrations
+namespace SteamCardsFarmer.Migrations
 {
     using System.Data.Entity.Migrations;
 

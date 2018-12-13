@@ -2,7 +2,7 @@
 using System.Windows.Markup;
 using System.Globalization;
 
-namespace GUI
+namespace SteamCardsFarmer
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml

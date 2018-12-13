@@ -59,11 +59,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SteamAPI\SteamAPI.csproj">
-      <Project>{662e020c-0f06-4908-abc7-1ac66eb83627}</Project>
-      <Name>SteamAPI</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

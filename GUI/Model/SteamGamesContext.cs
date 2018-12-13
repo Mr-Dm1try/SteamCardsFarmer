@@ -1,7 +1,7 @@
-﻿namespace GUI.Models
+﻿namespace SteamCardsFarmer.Model
 {
     using System.Data.Entity;
-    using GUI.Models.Types;
+    using SteamCardsFarmer.Model.Types;
 
     public class SteamGamesContext : DbContext {
         // Контекст настроен для использования строки подключения "SteamGamesContext" из файла конфигурации  
@@ -12,7 +12,7 @@
         // в файле конфигурации приложения.
         public SteamGamesContext()
             : base("name=SteamGamesContext") {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SteamGamesContext, GUI.Migrations.Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<SteamGamesContext, SteamCardsFarmer.Migrations.Configuration>());
         }
 
         // Добавьте DbSet для каждого типа сущности, который требуется включить в модель. Дополнительные сведения 

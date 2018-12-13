@@ -1,8 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace GUI.Models.Types
-{
+namespace SteamCardsFarmer.Model.Types {
     public class SSGame {
         [Key]
         public int Key { get; set; }        

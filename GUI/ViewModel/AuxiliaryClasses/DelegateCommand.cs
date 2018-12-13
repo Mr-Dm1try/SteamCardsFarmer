@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace GUI.ViewModels.AuxiliaryClasses
+namespace SteamCardsFarmer.ViewModel.AuxiliaryClasses
 {
     class DelegateCommand : ICommand
     {

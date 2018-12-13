@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GUI.Models.Types
+namespace SteamCardsFarmer.Model.Types
 {
     public class SMGameAndCards {
         [Key]

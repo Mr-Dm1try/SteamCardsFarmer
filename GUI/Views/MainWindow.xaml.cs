@@ -1,10 +1,10 @@
-﻿using System.Windows;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Navigation;
-using GUI.ViewModels;
 
-namespace GUI.Views
-{
+using SteamCardsFarmer.ViewModel;
+
+namespace SteamCardsFarmer.Views {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>

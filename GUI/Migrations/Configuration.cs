@@ -1,8 +1,8 @@
-namespace GUI.Migrations
+namespace SteamCardsFarmer.Migrations
 {
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<GUI.Models.SteamGamesContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Model.SteamGamesContext>
     {
         public Configuration()
         {
@@ -10,7 +10,7 @@ namespace GUI.Migrations
             AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(GUI.Models.SteamGamesContext context)
+        protected override void Seed(Model.SteamGamesContext context)
         {
             //  This method will be called after migrating to the latest version.
 

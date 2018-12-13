@@ -1,13 +1,13 @@
-﻿using GUI.ViewModels.AuxiliaryClasses;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
-using System.Collections.Generic;
-using GUI.Models.Types;
-using GUI.Models.API;
 
-namespace GUI.ViewModels
-{
+using SteamCardsFarmer.Model.API;
+using SteamCardsFarmer.Model.Types;
+using SteamCardsFarmer.ViewModel.AuxiliaryClasses;
+
+namespace SteamCardsFarmer.ViewModel {
     class MainViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private SteamMarketAPI marketAPI;

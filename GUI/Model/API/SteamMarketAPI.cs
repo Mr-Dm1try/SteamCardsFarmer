@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using HtmlAgilityPack;
-using GUI.Models.Types;
 
-namespace GUI.Models.API
-{
+using HtmlAgilityPack;
+
+using SteamCardsFarmer.Model.Types;
+
+namespace SteamCardsFarmer.Model.API {
     public class SteamMarketAPI {
         private readonly SteamGamesContext context;
         private readonly string baseUrl = "https://steamcommunity.com/market/search?category_753_Game[]=tag_app_*gameID*&category_753_cardborder[]=tag_cardborder_0&category_753_item_class[]=tag_item_class_2#p1_price_desc";
