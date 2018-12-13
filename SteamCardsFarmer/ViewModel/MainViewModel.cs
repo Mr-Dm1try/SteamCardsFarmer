@@ -14,6 +14,7 @@ namespace SteamCardsFarmer.ViewModel {
         private SteamShopAPI shopAPI;
         private string gameMaxPrice;
         private double mxGamePrice;
+
         public string GameMaxPrice
         {
             get => gameMaxPrice;
@@ -23,6 +24,7 @@ namespace SteamCardsFarmer.ViewModel {
                 OnPropertyChanged("GameMaxPrice");
             }
         }
+
         public List<SMGameAndCards> Games
         {
             get
@@ -31,6 +33,7 @@ namespace SteamCardsFarmer.ViewModel {
                 else return null;
             }
         }
+
         public string ChanceString
         {
             get
@@ -39,12 +42,14 @@ namespace SteamCardsFarmer.ViewModel {
                 else return "Шанс: ";
             }
         }
+
         public MainViewModel()
         {
             gameMaxPrice = ""; mxGamePrice = 0;
             shopAPI = new SteamShopAPI();
             FetchGamesCommand = new DelegateCommand(FetchGames, CanFetchGames);
         }
+
         #region Commands
         private void FetchGames(object obj)
         {
@@ -52,17 +57,20 @@ namespace SteamCardsFarmer.ViewModel {
             shopAPI.ReloadGamesDB(mxGamePrice);
             marketAPI = new SteamMarketAPI(shopAPI.GetGames());
             Comparison<SSGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
-            marketAPI.Games.Sort(gamesComparison);
+            //marketAPI.Games.Sort(gamesComparison);
             marketAPI.WeedOutGames();
             OnPropertyChanged("Games");
         }
+
         private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 && IsValid ? true : false;
+
         public ICommand FetchGamesCommand
         {
             get;
             private set;
         }
         #endregion
+
         #region Validation
         string IDataErrorInfo.Error => null;
         string IDataErrorInfo.this[string propertyName] => GetValidationError(propertyName);
@@ -105,6 +113,7 @@ namespace SteamCardsFarmer.ViewModel {
             }
         }
         #endregion
+
         #region PropertyChanges
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

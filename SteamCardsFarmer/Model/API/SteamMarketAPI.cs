@@ -19,21 +19,28 @@ namespace SteamCardsFarmer.Model.API {
 
         private static double incomeRatio = 0.8695652173913043;     // Если умножить цену на это число, то отсеется комиссия ТП стима
 
-        public List<SSGame> Games { get; set; }
+        private List<SSGame> Games { get; set; }
 
         public SteamMarketAPI(List<SSGame> games) {
             context = new SteamGamesContext();
             Games = games;
         }
 
+        /// <summary> Получение игр с карточками </summary>
+        /// <returns> Возвращает лист игр с карточками из таблицы SMGamesWithCards </returns>
         public List<SMGameAndCards> GetGamesWithCards() {
             var result = context.SMGamesWithCards.ToList();
             if (result.Count > 0)
                 return result;
+            else if (Games.Count > 0) {
+                WeedOutGames();
+                return context.SMGamesWithCards.ToList();
+            }
             else
-                throw new Exception("Database is empty!");
+                throw new ObjectDisposedException("Database is empty!");
         }
 
+        /// <summary> Получить карточки для игр и рассчитать шанс на окупаемость </summary>
         public void WeedOutGames() {
             foreach (var entity in context.SMGamesWithCards.ToList())
                 context.SMGamesWithCards.Remove(entity);
@@ -43,7 +50,7 @@ namespace SteamCardsFarmer.Model.API {
                 List<double> cardPrices = GetCardPrices(game, out int cardsCount);
 
                 double sumOfAdditionalCards = (cardsCount != cardPrices.Count) ? (cardsCount - cardPrices.Count) * cardPrices.Last() : 0;
-                double cardsAvgPrice = (cardsCount != 0) ? (cardPrices.Sum() + sumOfAdditionalCards) / cardsCount : 0; //в предыдущей версии при количестве карт == 0 возвращала NaN, что и приводило к Exception
+                double cardsAvgPrice = cardPrices.Sum() + sumOfAdditionalCards;     // если карт нет - значит что-то пошло не так. Мы не должны об этом умалчивать
 
                 double chanceToPayOff = GetChanceToPayOff(game.Price, cardPrices, cardsCount);
 
@@ -131,8 +138,8 @@ namespace SteamCardsFarmer.Model.API {
         }
 
         private List<double> GetCardPrices(SSGame game, out int cardsCount) {
-            //string url = baseUrl.Replace("*gameID*", game.Key.ToString());                                                                                                                    //временное
-            string url = baseUrl.Replace("*gameID*", game.Link.Substring(game.Link.LastIndexOf("app/") + 4).Substring(0, game.Link.Substring(game.Link.LastIndexOf("app/") + 4).IndexOf("/"))); //решение
+            //string url = baseUrl.Replace("*gameID*", game.Key.ToString());                                                                                                                   
+            string url = baseUrl.Replace("*gameID*", game.Link.Split( new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0]); // Пока не разберемся с полем Key
             List<double> cards = new List<double>();
 
             using (var client = new WebClient()) {
@@ -142,16 +149,16 @@ namespace SteamCardsFarmer.Model.API {
 
                 var cardNodes = document.DocumentNode.SelectNodes(@"//div[@id = 'searchResults']/div[@id = 'searchResultsTable']/div[@id = 'searchResultsRows']/a[@class = 'market_listing_row_link']");
 
-                if (cardNodes != null)
-                {
-                    foreach (var node in cardNodes)
-                    {
+                if (cardNodes != null) {
+                    foreach (var node in cardNodes) {
                         var price = node.SelectSingleNode(@"div[1]/div[1]/div[2]/span[1]/span[1]").InnerText;
                         price = price.Split(new[] { " " }, StringSplitOptions.None)[0].Remove(0, 1).Replace('.', ',');
 
                         cards.Add(double.Parse(price) * OneUSDinRUB);
                     }
                 }
+                else
+                    throw new NullReferenceException($"Не найдены карточки для игры {game.Title}");
 
                 cardsCount = int.Parse(document.DocumentNode.SelectSingleNode(@"//div[@id = 'searchResults_ctn']/div[2]/span[@id = 'searchResults_total']").InnerText);
             }

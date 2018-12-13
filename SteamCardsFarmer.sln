@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamMarketAPI.Test", "Stea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtherTests", "OtherTests\OtherTests.csproj", "{F2445CEE-FD3E-4C8F-9E38-3E4718DE872F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamCardsFarmer", "GUI\SteamCardsFarmer.csproj", "{0495C324-D252-41A4-8A2D-38228607068F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamCardsFarmer", "SteamCardsFarmer\SteamCardsFarmer.csproj", "{0495C324-D252-41A4-8A2D-38228607068F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
