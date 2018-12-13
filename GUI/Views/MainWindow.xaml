@@ -25,7 +25,7 @@
             <Label x:Name="MaxPriceLabel" Width="Auto" Height="28" Content="Максимальная цена игры"/>
         </Border>
         <Border Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <TextBox x:Name="GamePriceTextBox" TextWrapping="NoWrap" Text="{Binding GameMaxPrice}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="Auto" MinHeight="28" Width="74"/>
+            <TextBox x:Name="GamePriceTextBox" TextWrapping="NoWrap" Text="{Binding GameMaxPrice, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="Auto" MinHeight="28" Width="74"/>
         </Border>
         <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <ListBox x:Name="GamesListBox" ItemsSource="{Binding Games}">
@@ -37,10 +37,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Padding="1">
-                                <Image Width="53.6" Height="25" Source="{Binding ImageUrl}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                <Image Width="53.6" Height="25" Source="{Binding Game.ImageUrl}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             </Border>
                             <Border Grid.Column="1" Padding="1">
-                                <TextBlock FontSize="12" FontWeight="Normal" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                <TextBlock FontSize="12" FontWeight="Normal" Text="{Binding Game.Title}" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </DataTemplate>
@@ -53,27 +53,24 @@
         <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Padding="0, 0, 0, 0">
             <StackPanel DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}" Orientation="Vertical" HorizontalAlignment="Stretch">
                 <Border>
-                    <Image x:Name="GameImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Source="{Binding ImageUrl}"/>
+                    <Image x:Name="GameImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Source="{Binding Game.ImageUrl}"/>
                 </Border>
                 <Border>
                     <Label x:Name="GameTitleLabel" HorizontalAlignment="Stretch" Height="28">
-                        <Hyperlink NavigateUri="{Binding Link}" RequestNavigate="Hyperlink_RequestNavigate">
-                            <TextBlock Text="{Binding Title}"/>
+                        <Hyperlink NavigateUri="{Binding Game.Link}" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="{Binding Game.Title}"/>
                         </Hyperlink>
                     </Label>
                 </Border>
                 <Border>
-                    <Label x:Name="GamePriceLabel" Content="{Binding Price}" HorizontalAlignment="Stretch" Height="28"/>
+                    <Label x:Name="GamePriceLabel" Content="{Binding Game.Price}" HorizontalAlignment="Stretch" Height="28"/>
                 </Border>
             </StackPanel>
         </Border>
         <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Padding="0, 0, 0, 0">
             <StackPanel>
                 <Border>
-                    <Button x:Name="CalculatePayoffChanceButton" Height="28" Content="Рассчитать шанс получения прибыли"/>
-                </Border>
-                <Border>
-                    <Label x:Name="ChanceLabel" Height="91" FontWeight="Bold" FontSize="40" Content="{Binding Games.Count}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="ChanceLabel" Height="91" FontWeight="Bold" FontSize="40" Content="{c:Binding 'ChanceString + ChanceToPayOff + %'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="{c:Binding ElementName=GamesListBox, Path='SelectedIndex != -1' }"/>
                 </Border>
             </StackPanel>
         </Border>

@@ -8,7 +8,7 @@ using GUI.Models.API;
 
 namespace GUI.ViewModels
 {
-    class MainViewModel : INotifyPropertyChanged
+    class MainViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private SteamMarketAPI marketAPI;
         private SteamShopAPI shopAPI;
@@ -23,31 +23,29 @@ namespace GUI.ViewModels
                 OnPropertyChanged("GameMaxPrice");
             }
         }
-        public List<SSGame> Games
+        public List<SMGameAndCards> Games
         {
             get
             {
-                if (marketAPI != null) return marketAPI.Games;
+                if (marketAPI != null) return marketAPI.GetGamesWithCards();
                 else return null;
-            }
-            set
-            {
-                marketAPI.Games = value;
-                OnPropertyChanged("Games");
             }
         }
         public string ChanceString
         {
-            get => "Шанс: ";
-
+            get
+            {
+                if (marketAPI == null) return null;
+                else return "Шанс: ";
+            }
         }
         public MainViewModel()
         {
             gameMaxPrice = ""; mxGamePrice = 0;
             shopAPI = new SteamShopAPI();
             FetchGamesCommand = new DelegateCommand(FetchGames, CanFetchGames);
-            CalculatePayoffChanceCommand = new DelegateCommand(CalculatePayoffChance, CanCalculatePayoffChance);
         }
+        #region Commands
         private void FetchGames(object obj)
         {
             mxGamePrice = Convert.ToDouble(gameMaxPrice);
@@ -55,26 +53,61 @@ namespace GUI.ViewModels
             marketAPI = new SteamMarketAPI(shopAPI.GetGames());
             Comparison<SSGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
             marketAPI.Games.Sort(gamesComparison);
-            Games = marketAPI.Games;
-        }
-        private void CalculatePayoffChance(object obj)
-        {
             marketAPI.WeedOutGames();
-            Games = marketAPI.Games;
+            OnPropertyChanged("Games");
         }
-        private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 ? true : false;
-        private bool CanCalculatePayoffChance(object arg) => marketAPI != null && marketAPI.Games.Count > 0 ? true : false;
+        private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 && IsValid ? true : false;
         public ICommand FetchGamesCommand
         {
             get;
             private set;
         }
-        public ICommand CalculatePayoffChanceCommand
+        #endregion
+        #region Validation
+        string IDataErrorInfo.Error => null;
+        string IDataErrorInfo.this[string propertyName] => GetValidationError(propertyName);
+        static readonly string[] ValidatedProperties =
         {
-            get;
-            private set;
+            "GameMaxPrice"
+        };
+        private string ValidatePrice()
+        {
+            try
+            {
+                Convert.ToDouble(GameMaxPrice);
+                return null;
+            }
+            catch (FormatException)
+            {
+                return "Должно быть введено число";
+            }
         }
+        string GetValidationError(string propertyName)
+        {
+            string error = null;
+            switch (propertyName)
+            {
+                case "GameMaxPrice":
+                    {
+                        error = ValidatePrice();
+                        break;
+                    }
+            }
+            return error;
+        }
+        public bool IsValid
+        {
+            get
+            {
+                foreach (string property in ValidatedProperties)
+                    if (GetValidationError(property) != null) return false;
+                return true;
+            }
+        }
+        #endregion
+        #region PropertyChanges
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        #endregion
     }
 }

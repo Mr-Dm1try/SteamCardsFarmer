@@ -42,7 +42,7 @@ namespace GUI.Models.API
                 List<double> cardPrices = GetCardPrices(game, out int cardsCount);
 
                 double sumOfAdditionalCards = (cardsCount != cardPrices.Count) ? (cardsCount - cardPrices.Count) * cardPrices.Last() : 0;
-                double cardsAvgPrice = (cardPrices.Sum() + sumOfAdditionalCards) / cardsCount;
+                double cardsAvgPrice = (cardsCount != 0) ? (cardPrices.Sum() + sumOfAdditionalCards) / cardsCount : 0; //в предыдущей версии при количестве карт == 0 возвращала NaN, что и приводило к Exception
 
                 double chanceToPayOff = GetChanceToPayOff(game.Price, cardPrices, cardsCount);
 
@@ -130,7 +130,8 @@ namespace GUI.Models.API
         }
 
         private List<double> GetCardPrices(SSGame game, out int cardsCount) {
-            string url = baseUrl.Replace("*gameID*", game.Key.ToString());
+            //string url = baseUrl.Replace("*gameID*", game.Key.ToString());                                                                                                                    //временное
+            string url = baseUrl.Replace("*gameID*", game.Link.Substring(game.Link.LastIndexOf("app/") + 4).Substring(0, game.Link.Substring(game.Link.LastIndexOf("app/") + 4).IndexOf("/"))); //решение
             List<double> cards = new List<double>();
 
             using (var client = new WebClient()) {
@@ -140,11 +141,15 @@ namespace GUI.Models.API
 
                 var cardNodes = document.DocumentNode.SelectNodes(@"//div[@id = 'searchResults']/div[@id = 'searchResultsTable']/div[@id = 'searchResultsRows']/a[@class = 'market_listing_row_link']");
 
-                foreach (var node in cardNodes) {
-                    var price = node.SelectSingleNode(@"div[1]/div[1]/div[2]/span[1]/span[1]").InnerText;
-                    price = price.Split(new[] { " " }, StringSplitOptions.None)[0].Remove(0, 1).Replace('.', ',');
+                if (cardNodes != null)
+                {
+                    foreach (var node in cardNodes)
+                    {
+                        var price = node.SelectSingleNode(@"div[1]/div[1]/div[2]/span[1]/span[1]").InnerText;
+                        price = price.Split(new[] { " " }, StringSplitOptions.None)[0].Remove(0, 1).Replace('.', ',');
 
-                    cards.Add(double.Parse(price) * OneUSDinRUB);
+                        cards.Add(double.Parse(price) * OneUSDinRUB);
+                    }
                 }
 
                 cardsCount = int.Parse(document.DocumentNode.SelectSingleNode(@"//div[@id = 'searchResults_ctn']/div[2]/span[@id = 'searchResults_total']").InnerText);
