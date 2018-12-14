@@ -25,7 +25,7 @@ namespace SteamCardsFarmer.ViewModel {
             }
         }
 
-        public List<SMGameAndCards> Games
+        public List<SteamGame> Games
         {
             get
             {
@@ -56,7 +56,7 @@ namespace SteamCardsFarmer.ViewModel {
             mxGamePrice = Convert.ToDouble(gameMaxPrice);
             shopAPI.ReloadGamesDB(mxGamePrice);
             marketAPI = new SteamMarketAPI(shopAPI.GetGames());
-            Comparison<SSGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
+            Comparison<SteamGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
             //marketAPI.Games.Sort(gamesComparison);
             marketAPI.WeedOutGames();
             OnPropertyChanged("Games");

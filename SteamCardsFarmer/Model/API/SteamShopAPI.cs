@@ -18,28 +18,54 @@ namespace SteamCardsFarmer.Model.API {
         /// <summary> Обновление таблицы с играми в БД </summary>
         /// <param name="maxPrice"> Максимальная цена, до которой ищутся игры </param>
         public void ReloadGamesDB(double maxPrice) {
-            foreach (var entity in context.SSGames.ToList())                 //очищаем БД
-                context.SSGames.Remove(entity);            
+            foreach (var entity in context.SteamGames.ToList())                 //очищаем БД
+                context.SteamGames.Remove(entity);            
 
             foreach (var game in SteamShopParse(maxPrice))
-                context.SSGames.Add(game.Value);
+                context.SteamGames.Add(game.Value);
 
             context.SaveChanges();
         }
 
         /// <summary> Получение игр </summary>
         /// <returns> Возвращает лист игр из таблицы SSGames </returns>
-        public List<SSGame> GetGames() {
-            var result = context.SSGames.ToList();
-            if (result.Count > 0)
-                return result;
+        public List<SteamGame> GetGames() {
+            if (GamesCount() > 0)
+                return context.SteamGames.ToList();
             else
-                throw new ObjectDisposedException("Database is empty!");
+                throw new ObjectDisposedException("База данных пуста!");
         }
 
-        private Dictionary<string, SSGame> SteamShopParse(double maxPrice) {
+        /// <summary> Получение игр по диапазону </summary>
+        /// <param name="first"> Порядковый индекс первой игры (с нуля) </param>
+        /// <param name="last"> Поредковый индекс последней игры из диапазона </param>
+        /// <returns> Возвращает заданный диапазон игр из БД </returns>
+        public List<SteamGame> GetGamesInRange(int first, int last) {
+            if (GamesCount() <= 0)
+                throw new ObjectDisposedException("База данных пуста!");
+            if (first > last)
+                throw new ArgumentException("Правая граница диапазоно должна быть >= левой!");
+            if (first > 0 && first < GamesCount() - 1)
+                throw new ArgumentException("Значение за пределами допустимого диапазона", "first");
+            if (last > 0 && last < GamesCount() - 1)
+                throw new ArgumentException("Значение за пределами допустимого диапазона", "last");                    
+
+            List<SteamGame> result = new List<SteamGame>(last - first + 1);
+            for (int i = first; i <= last; i++)
+                result.Add(context.SteamGames.ElementAt(i));
+
+            return result;
+        }
+
+        /// <summary> Получить количество игр </summary>
+        /// <returns> Возвращает количество игр в БД </returns>
+        public int GamesCount() {
+            return context.SteamGames.Count();
+        }
+
+        private Dictionary<string, SteamGame> SteamShopParse(double maxPrice) {
             var url = baseUrl;
-            Dictionary<string, SSGame> games = new Dictionary<string, SSGame>();
+            Dictionary<string, SteamGame> games = new Dictionary<string, SteamGame>();
 
             using (var client = new WebClient()) {
                 double currPrice = 0;
@@ -71,12 +97,13 @@ namespace SteamCardsFarmer.Model.API {
 
                         var image = baseImageUrl.Replace("*gameID*", id);
 
-                        var game = new SSGame() {
-                            Key = Convert.ToInt32(id),
+                        var game = new SteamGame() {
+                            Id = Convert.ToInt32(id),
                             Title = title,
                             Price = currPrice,
                             Link = href,
-                            ImageUrl = image
+                            ImageUrl = image,
+                            HasCards = false
                         };
 
                         try {

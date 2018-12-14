@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 
@@ -19,52 +20,54 @@ namespace SteamCardsFarmer.Model.API {
 
         private static double incomeRatio = 0.8695652173913043;     // Если умножить цену на это число, то отсеется комиссия ТП стима
 
-        private List<SSGame> Games { get; set; }
+        private DbSet<SteamGame> _games;
 
-        public SteamMarketAPI(List<SSGame> games) {
+        public SteamMarketAPI() {
             context = new SteamGamesContext();
-            Games = games;
+            _games = context.SteamGames;
         }
 
         /// <summary> Получение игр с карточками </summary>
         /// <returns> Возвращает лист игр с карточками из таблицы SMGamesWithCards </returns>
-        public List<SMGameAndCards> GetGamesWithCards() {
-            var result = context.SMGamesWithCards.ToList();
-            if (result.Count > 0)
-                return result;
-            else if (Games.Count > 0) {
-                WeedOutGames();
-                return context.SMGamesWithCards.ToList();
-            }
-            else
-                throw new ObjectDisposedException("Database is empty!");
+        public List<SteamGame> GetGamesWithCardsInRange(int first, int last) {
+            if (GamesCount() <= 0)
+                throw new ObjectDisposedException("База данных пуста!");
+            if (first > last)
+                throw new ArgumentException("Правая граница диапазоно должна быть >= левой!");
+            if (first > 0 && first < GamesCount() - 1)
+                throw new ArgumentException("Значение за пределами допустимого диапазона", "first");
+            if (last > 0 && last < GamesCount() - 1)
+                throw new ArgumentException("Значение за пределами допустимого диапазона", "last");
+
+            List<SteamGame> result = new List<SteamGame>(last - first + 1);
+            for (int i = first; i <= last; i++)
+                if (!_games.ElementAt(i).HasCards) {
+                    WeedOutGame(_games.ElementAt(i));
+                    result.Add(_games.ElementAt(i));
+                }
+          
+            return context.SteamGames.ToList();            
+        }
+
+        public int GamesCount() {
+            return context.SteamGames.Count();
         }
 
         /// <summary> Получить карточки для игр и рассчитать шанс на окупаемость </summary>
-        public void WeedOutGames() {
-            foreach (var entity in context.SMGamesWithCards.ToList())
-                context.SMGamesWithCards.Remove(entity);
+        private void WeedOutGame(SteamGame game) {
+            
+            List<double> cardPrices = GetCardPrices(game, out int cardsCount);
 
-            List<SMGameAndCards> gamesAndCards = new List<SMGameAndCards>();
-            foreach (var game in Games) {
-                List<double> cardPrices = GetCardPrices(game, out int cardsCount);
+            double sumOfAdditionalCards = (cardsCount != cardPrices.Count) ? (cardsCount - cardPrices.Count) * cardPrices.Last() : 0;
+            double cardsAvgPrice = cardPrices.Sum() + sumOfAdditionalCards;     // если карт нет - значит что-то пошло не так. Мы не должны об этом умалчивать
 
-                double sumOfAdditionalCards = (cardsCount != cardPrices.Count) ? (cardsCount - cardPrices.Count) * cardPrices.Last() : 0;
-                double cardsAvgPrice = cardPrices.Sum() + sumOfAdditionalCards;     // если карт нет - значит что-то пошло не так. Мы не должны об этом умалчивать
+            double chanceToPayOff = GetChanceToPayOff(game.Price, cardPrices, cardsCount);
 
-                double chanceToPayOff = GetChanceToPayOff(game.Price, cardPrices, cardsCount);
-
-                gamesAndCards.Add(new SMGameAndCards {
-                    Game = game,
-                    CardsCount = cardsCount,
-                    CardsAveragePrice = cardsAvgPrice,
-                    ChanceToPayOff = chanceToPayOff
-                });                     
-            }
-
-            foreach (var game in gamesAndCards) 
-                context.SMGamesWithCards.Add(game);
-
+            game.CardsCount = cardsCount;
+            game.CardsAveragePrice = cardsAvgPrice;
+            game.ChanceToPayOff = chanceToPayOff;
+            game.HasCards = true;
+                        
             context.SaveChanges();
         }
 
@@ -137,7 +140,7 @@ namespace SteamCardsFarmer.Model.API {
             }
         }
 
-        private List<double> GetCardPrices(SSGame game, out int cardsCount) {
+        private List<double> GetCardPrices(SteamGame game, out int cardsCount) {
             //string url = baseUrl.Replace("*gameID*", game.Key.ToString());                                                                                                                   
             string url = baseUrl.Replace("*gameID*", game.Link.Split( new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0]); // Пока не разберемся с полем Key
             List<double> cards = new List<double>();
