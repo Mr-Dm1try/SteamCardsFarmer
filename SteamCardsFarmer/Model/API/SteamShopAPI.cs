@@ -44,7 +44,7 @@ namespace SteamCardsFarmer.Model.API {
             if (GamesCount() <= 0)
                 throw new ObjectDisposedException("База данных пуста!");
             if (first > last)
-                throw new ArgumentException("Правая граница диапазоно должна быть >= левой!");
+                throw new ArgumentException("Правая граница диапазона должна быть >= левой!");
             if (first > 0 && first < GamesCount() - 1)
                 throw new ArgumentException("Значение за пределами допустимого диапазона", "first");
             if (last > 0 && last < GamesCount() - 1)

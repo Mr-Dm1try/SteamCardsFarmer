@@ -29,7 +29,7 @@ namespace SteamCardsFarmer.ViewModel {
         {
             get
             {
-                if (marketAPI != null) return marketAPI.GetGamesWithCards();
+                if (marketAPI != null) return /*marketAPI.GetGamesWithCards()*/null;
                 else return null;
             }
         }
@@ -55,10 +55,10 @@ namespace SteamCardsFarmer.ViewModel {
         {
             mxGamePrice = Convert.ToDouble(gameMaxPrice);
             shopAPI.ReloadGamesDB(mxGamePrice);
-            marketAPI = new SteamMarketAPI(shopAPI.GetGames());
+            //marketAPI = new SteamMarketAPI(shopAPI.GetGames());
             Comparison<SteamGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
             //marketAPI.Games.Sort(gamesComparison);
-            marketAPI.WeedOutGames();
+            //marketAPI.WeedOutGames();
             OnPropertyChanged("Games");
         }
 
