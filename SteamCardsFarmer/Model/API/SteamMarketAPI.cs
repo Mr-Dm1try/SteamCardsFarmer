@@ -18,7 +18,7 @@ namespace SteamCardsFarmer.Model.API {
         private static double syncRUB = 21.24;
         private static double OneUSDinRUB = syncRUB / syncUSD;
 
-        private static double incomeRatio = 0.8695652173913043;     // Если умножить цену на это число, то отсеется комиссия ТП стима
+        private static double incomeRatio = 0.86958;     // Если умножить цену на это число, то отсеется комиссия ТП стима
 
         private DbSet<SteamGame> _games;
 
