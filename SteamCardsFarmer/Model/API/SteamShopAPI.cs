@@ -56,10 +56,13 @@ namespace SteamCardsFarmer.Model.API {
                         var title = node.SelectSingleNode("div[2]/div[1]/span[@class = 'title']").InnerText;
                         var price = node.SelectSingleNode("div[2]/div[4]/div[2]").InnerText;
                         var href = node.GetAttributeValue("href", "error");
-                        var id = href.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0];
 
                         if (!price.Contains('.') || href.Contains("/sub/"))     // обход бесплатных игр и паков
                             continue;
+
+                        var id = href.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0];
+
+                        
 
                         var arr = price.Split(new[] { "pСѓР±." }, StringSplitOptions.None);     //разбиение по подстроке "руб."
                         currPrice = double.Parse((arr.Count() > 2) ? arr[1] : arr[0]);
