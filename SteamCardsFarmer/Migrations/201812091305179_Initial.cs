@@ -2,8 +2,10 @@ namespace SteamCardsFarmer.Migrations
 {
     using System.Data.Entity.Migrations;
 
+    /// <summary>Класс работы с БД</summary>
     public partial class Initial : DbMigration
     {
+        /// <summary>Этот метод создает БД</summary>
         public override void Up()
         {
             CreateTable(
@@ -33,7 +35,8 @@ namespace SteamCardsFarmer.Migrations
                 .PrimaryKey(t => t.Key);
             
         }
-        
+
+        /// <summary>Этот метод удаляет БД</summary>
         public override void Down()
         {
             DropForeignKey("dbo.SMGameAndCards", "Game_Key", "dbo.SSGames");

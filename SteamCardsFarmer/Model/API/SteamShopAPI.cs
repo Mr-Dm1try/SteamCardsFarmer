@@ -8,11 +8,13 @@ using HtmlAgilityPack;
 using SteamCardsFarmer.Model.Types;
 
 namespace SteamCardsFarmer.Model.API {
+    /// <summary>Этот класс является своеобразным API для магазина Steam.</summary>
     public sealed class SteamShopAPI {
         private readonly SteamGamesContext context;
         private readonly string baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
         private readonly string baseImageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/*gameID*/header.jpg";
 
+        /// <summary>Конструктор класса. В нем создается экземпляр класса контекста БД для игр.</summary>
         public SteamShopAPI() => context = new SteamGamesContext();
 
         /// <summary> Обновление таблицы с играми в БД </summary>
@@ -63,6 +65,8 @@ namespace SteamCardsFarmer.Model.API {
             return context.SteamGames.Count();
         }
 
+        /// <summary>Функция, которая парсит магазин игр Steam по полученной в аргументе максимальной цене. Возвращает словарь с играми.</summary>
+        /// <param name="maxPrice">Добавьте максимальную цену.</param>
         private Dictionary<string, SteamGame> SteamShopParse(double maxPrice) {
             var url = baseUrl;
             Dictionary<string, SteamGame> games = new Dictionary<string, SteamGame>();
@@ -70,50 +74,61 @@ namespace SteamCardsFarmer.Model.API {
             using (var client = new WebClient()) {
                 double currPrice = 0;
                 do {
-                    var html = client.DownloadString(url);
-                    var document = new HtmlDocument();
-                    document.LoadHtml(html);
+                    try
+                    {
+                        var html = client.DownloadString(url);
+                        var document = new HtmlDocument();
+                        document.LoadHtml(html);
 
-                    var gameNodes = document.DocumentNode.SelectNodes(@"//div[@id = 'search_results']/div[@id = 'search_result_container']/div[2]/a");
-                    if (gameNodes == null)  // For what?
-                        continue;
-
-                    foreach (var node in gameNodes) {
-                        var title = node.SelectSingleNode("div[2]/div[1]/span[@class = 'title']").InnerText;
-                        var price = node.SelectSingleNode("div[2]/div[4]/div[2]").InnerText;
-                        var href = node.GetAttributeValue("href", "error");
-
-                        if (!price.Contains('.') || href.Contains("/sub/"))     // обход бесплатных игр и паков
+                        var gameNodes = document.DocumentNode.SelectNodes(@"//div[@id = 'search_results']/div[@id = 'search_result_container']/div[2]/a");
+                        if (gameNodes == null)  // For what?
                             continue;
 
-                        var id = href.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0];
+                        foreach (var node in gameNodes)
+                        {
+                            var title = node.SelectSingleNode("div[2]/div[1]/span[@class = 'title']").InnerText;
+                            var price = node.SelectSingleNode("div[2]/div[4]/div[2]").InnerText;
+                            var href = node.GetAttributeValue("href", "error");
 
-                        
+                            if (!price.Contains('.') || href.Contains("/sub/"))     // обход бесплатных игр и паков
+                                continue;
 
-                        var arr = price.Split(new[] { "pСѓР±." }, StringSplitOptions.None);     //разбиение по подстроке "руб."
-                        currPrice = double.Parse((arr.Count() > 2) ? arr[1] : arr[0]);
-                        if (currPrice > maxPrice)
-                            break;
+                            var id = href.Split(new[] { "app/" }, StringSplitOptions.None)[1].Split('/')[0];
 
-                        var image = baseImageUrl.Replace("*gameID*", id);
 
-                        var game = new SteamGame() {
-                            Id = Convert.ToInt32(id),
-                            Title = title,
-                            Price = currPrice,
-                            Link = href,
-                            ImageUrl = image,
-                            HasCards = false
-                        };
 
-                        try {
-                            games.Add(game.Title, game);
-                        }
-                        catch (ArgumentException) {
-                            continue;
+                            var arr = price.Split(new[] { "pСѓР±." }, StringSplitOptions.None);     //разбиение по подстроке "руб."
+                            currPrice = double.Parse((arr.Count() > 2) ? arr[1] : arr[0]);
+                            if (currPrice > maxPrice)
+                                break;
+
+                            var image = baseImageUrl.Replace("*gameID*", id);
+
+                            var game = new SteamGame()
+                            {
+                                Id = Convert.ToInt32(id),
+                                Title = title,
+                                Price = currPrice,
+                                Link = href,
+                                ImageUrl = image,
+                                HasCards = false
+                            };
+
+                            try
+                            {
+                                games.Add(game.Title, game);
+                            }
+                            catch (ArgumentException)
+                            {
+                                continue;
+                            }
                         }
                     }
-
+                    catch (WebException e)
+                    {
+                        throw new WebException("Нет доступа к ресурсу, проверьте подключение к интернету.");
+                    }
+                    
                     var nextPageButtons = document.DocumentNode.SelectNodes(@"//div[@class = 'search_pagination_right']/a[@class = 'pagebtn']");
                     foreach (var button in nextPageButtons)
                         if (button.InnerText == "&gt;")         //знак >

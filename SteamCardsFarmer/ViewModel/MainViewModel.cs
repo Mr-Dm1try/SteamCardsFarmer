@@ -8,6 +8,7 @@ using SteamCardsFarmer.Model.Types;
 using SteamCardsFarmer.ViewModel.AuxiliaryClasses;
 
 namespace SteamCardsFarmer.ViewModel {
+    /// <summary>Класс, отвечающий за логику MVVM</summary>
     class MainViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private SteamMarketAPI marketAPI;
@@ -15,6 +16,7 @@ namespace SteamCardsFarmer.ViewModel {
         private string gameMaxPrice;
         private double mxGamePrice;
 
+        /// <summary>Свойство работает с максимальной ценой, устанавливаемой пользователем</summary>
         public string GameMaxPrice
         {
             get => gameMaxPrice;
@@ -25,6 +27,7 @@ namespace SteamCardsFarmer.ViewModel {
             }
         }
 
+        /// <summary>Свойство возвращает список с играми</summary>
         public List<SteamGame> Games
         {
             get
@@ -34,6 +37,7 @@ namespace SteamCardsFarmer.ViewModel {
             }
         }
 
+        /// <summary>Свойство возвращает строку "Шанс: ", если это возможно</summary>
         public string ChanceString
         {
             get
@@ -43,6 +47,7 @@ namespace SteamCardsFarmer.ViewModel {
             }
         }
 
+        /// <summary>Конструктор класса, инициализирующий элементы</summary>
         public MainViewModel()
         {
             gameMaxPrice = ""; mxGamePrice = 0;
@@ -51,6 +56,9 @@ namespace SteamCardsFarmer.ViewModel {
         }
 
         #region Commands
+        //Мехн, добавь адекватное описание функции и смысла параметра
+        /// <summary>Функция извлечения игр</summary>
+        /// <param name="obj"></param>
         private void FetchGames(object obj)
         {
             mxGamePrice = Convert.ToDouble(gameMaxPrice);
@@ -62,6 +70,9 @@ namespace SteamCardsFarmer.ViewModel {
             OnPropertyChanged("Games");
         }
 
+        //Аналогично
+        /// <summary>Функция узнает, можно ли извлечь игры</summary>
+        /// <param name="arg"></param>
         private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 && IsValid ? true : false;
 
         public ICommand FetchGamesCommand
@@ -74,10 +85,13 @@ namespace SteamCardsFarmer.ViewModel {
         #region Validation
         string IDataErrorInfo.Error => null;
         string IDataErrorInfo.this[string propertyName] => GetValidationError(propertyName);
+        //Щито?(
+        /// <summary>???</summary>
         static readonly string[] ValidatedProperties =
         {
             "GameMaxPrice"
         };
+        /// <summary>Функция валидации цены</summary>
         private string ValidatePrice()
         {
             try
@@ -90,6 +104,8 @@ namespace SteamCardsFarmer.ViewModel {
                 return "Должно быть введено число";
             }
         }
+        /// <summary>Возвращает ошибку, полученную при валидации</summary>
+        /// <param name="propertyName">Название свойства</param>
         string GetValidationError(string propertyName)
         {
             string error = null;
@@ -103,6 +119,8 @@ namespace SteamCardsFarmer.ViewModel {
             }
             return error;
         }
+        //Ну ты понял
+        /// <summary></summary>
         public bool IsValid
         {
             get
@@ -116,6 +134,9 @@ namespace SteamCardsFarmer.ViewModel {
 
         #region PropertyChanges
         public event PropertyChangedEventHandler PropertyChanged;
+        //И тут тоже понял
+        /// <summary></summary>
+        /// <param name="propertyName">Название свойства</param>
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         #endregion
     }
