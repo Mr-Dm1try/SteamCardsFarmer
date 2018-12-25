@@ -64,18 +64,24 @@ namespace SteamCardsFarmer.ViewModel {
             Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
         }
 
+        /// <summary>Метод для увеличения максимального индекса отображаемой части списка игр</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         private void IncreaseIndex(object arg)
         {
             gameMaxIndex += gameMaxIndex + 10 <= shopAPI.GamesCount() ? 10 : shopAPI.GamesCount() - gameMaxIndex;
             Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
         }
 
+        /// <summary>Метод для уменьшения максимального индекса отображаемой части списка игр</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         private void DecreaseIndex(object arg)
         {
             gameMaxIndex -= gameMaxIndex - 10 >= 9 ? 10 : 10 - gameMaxIndex;
             Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
         }
 
+        /// <summary>Метод для извлечения карт для игр с Торговой площадки</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         private void GetCards(object arg)
         {
             Games = marketAPI.GetGamesWithCardsInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
@@ -85,10 +91,16 @@ namespace SteamCardsFarmer.ViewModel {
         /// <param name="arg">Объект, который вызывает процедуру</param>
         private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 && IsValid ? true : false;
 
+        /// <summary>Метод, проверяющий, можно ли увеличить максимальный индекс отображаемой части списка игр</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         private bool CanIncreaseIndex(object arg) => shopAPI != null && gameMaxIndex < shopAPI.GamesCount() && Games != null;
 
+        /// <summary>Метод, проверяющий, можно ли уменьшить максимальный индекс отображаемой части списка игр</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         public bool CanDecreaseIndex(object arg) => shopAPI != null && gameMaxIndex > 9 && shopAPI.GamesCount() > 0;
 
+        /// <summary>Метод, проверяющий, можно ли извлечь карты для игр с Торговой площадки</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         public bool CanGetCards(object arg) => marketAPI != null;
 
         public ICommand FetchGamesCommand
