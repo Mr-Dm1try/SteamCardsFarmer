@@ -105,9 +105,9 @@ namespace SteamCardsFarmer.Model.API {
         /// <summary>Алгоритм возвращает true, если дальнейшие вычисления целесообразны, и false в ином случае</summary>
         /// <param name="gamePrice">Цена игры</param>
         /// <param name="cardPrices">Цены карточек</param>
-        /// <param name="usesCount"></param>
-        /// <param name="dropCardsCount">Число выпавших карточек.</param>
-        /// <param name="positiveCases"></param>
+        /// <param name="usesCount">Количество использований для каждой карты</param>
+        /// <param name="dropCardsCount">Число выпавших карточек</param>
+        /// <param name="positiveCases">Сумма всех возможных размещений с положительными исходами (возвращаемый параметр)</param>
         private bool BruteForce(double gamePrice, List<double> cardPrices, int[] usesCount, int dropCardsCount, ref int positiveCases) {
             int depth = usesCount.Sum();                                            //Количество использованных карточек
 
@@ -143,7 +143,7 @@ namespace SteamCardsFarmer.Model.API {
                 throw new Exception("Unexpected error! Something went wrong!");
         }
 
-        /// <summary></summary>
+        /// <summary>Позволяет рассчитать сумму всех возможных размещений с положительными исходами</summary>
         /// <param name="K">Нижняя граница</param>
         /// <param name="N">Верхняя граница</param>
         private int Arrangement(int K, int N) {

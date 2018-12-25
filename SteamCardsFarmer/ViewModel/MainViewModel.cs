@@ -56,9 +56,9 @@ namespace SteamCardsFarmer.ViewModel {
         }
 
         #region Commands
-        //Мехн, добавь адекватное описание функции и смысла параметра
-        /// <summary>Функция извлечения игр</summary>
-        /// <param name="obj"></param>
+        
+        /// <summary>Метод для ивлечения игр из магазина</summary>
+        /// <param name="obj">Объект, который вызывает процедуру</param>
         private void FetchGames(object obj)
         {
             mxGamePrice = Convert.ToDouble(gameMaxPrice);
@@ -70,9 +70,8 @@ namespace SteamCardsFarmer.ViewModel {
             OnPropertyChanged("Games");
         }
 
-        //Аналогично
-        /// <summary>Функция узнает, можно ли извлечь игры</summary>
-        /// <param name="arg"></param>
+        /// <summary>Метод проверяет, можно ли извлечь игры</summary>
+        /// <param name="arg">Объект, который вызывает процедуру</param>
         private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 && IsValid ? true : false;
 
         public ICommand FetchGamesCommand
@@ -85,13 +84,13 @@ namespace SteamCardsFarmer.ViewModel {
         #region Validation
         string IDataErrorInfo.Error => null;
         string IDataErrorInfo.this[string propertyName] => GetValidationError(propertyName);
-        //Щито?(
-        /// <summary>???</summary>
+   
+        /// <summary>Массив с именами свойств, которые проверяются на корректность</summary>
         static readonly string[] ValidatedProperties =
         {
             "GameMaxPrice"
         };
-        /// <summary>Функция валидации цены</summary>
+        /// <summary>Метод, проверяющий корректность цены</summary>
         private string ValidatePrice()
         {
             try
@@ -119,8 +118,8 @@ namespace SteamCardsFarmer.ViewModel {
             }
             return error;
         }
-        //Ну ты понял
-        /// <summary></summary>
+        
+        /// <summary>Свойство, значение которого зависит от корректности всех проверяемых свойств</summary>
         public bool IsValid
         {
             get
@@ -134,8 +133,8 @@ namespace SteamCardsFarmer.ViewModel {
 
         #region PropertyChanges
         public event PropertyChangedEventHandler PropertyChanged;
-        //И тут тоже понял
-        /// <summary></summary>
+        
+        /// <summary>Метод, который вызывается при изменении свойства и вызывает событие, связанное с этим свойством</summary>
         /// <param name="propertyName">Название свойства</param>
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         #endregion
