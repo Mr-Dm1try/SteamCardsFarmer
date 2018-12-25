@@ -20,6 +20,15 @@ namespace SteamCardsFarmer.Model.API {
         /// <summary>Конструктор класса. В нем создается экземпляр класса контекста БД для игр.</summary>
         public SteamShopAPI() => context = new SteamGamesContext();
 
+        /// <summary> Максимальная цена среди сохраненных игр </summary>
+        /// <returns> Возвращает цену игры или 0, если БД пуста </returns>
+        public double MaxPriceInDB() {
+            if (context.SteamGames.Count() > 0)
+                return context.SteamGames.Last().Price;
+            else
+                return 0;
+        }
+
         /// <summary> Обновление таблицы с играми в БД </summary>
         /// <param name="maxPrice"> Максимальная цена, до которой ищутся игры </param>
         public void ReloadGamesDB(double maxPrice) {
