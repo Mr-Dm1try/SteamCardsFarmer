@@ -21,7 +21,7 @@ namespace SteamCardsFarmer.Model.API {
 
         private static double incomeRatio = 0.86958;     // Если умножить цену на это число, то отсеется комиссия ТП стима
 
-        private DbSet<SteamGame> _games;
+        private List<SteamGame> _games;
 
         /// <summary> Событие обработки игры просеивателем </summary>
         public event Action<String> GameHasBeenWeededOut;
@@ -29,7 +29,7 @@ namespace SteamCardsFarmer.Model.API {
         /// <summary>Конструктор класса. Задает связи с базой данных.</summary>
         public SteamMarketAPI() {
             context = new SteamGamesContext();
-            _games = context.SteamGames;
+            _games = context.SteamGames.ToList();
         }
 
         /// <summary>Получение игр с карточками</summary>

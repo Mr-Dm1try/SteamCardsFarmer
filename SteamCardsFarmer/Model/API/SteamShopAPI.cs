@@ -54,11 +54,12 @@ namespace SteamCardsFarmer.Model.API {
             if (first > 0 && first < GamesCount() - 1)
                 throw new ArgumentException("Значение за пределами допустимого диапазона", "first");
             if (last > 0 && last < GamesCount() - 1)
-                throw new ArgumentException("Значение за пределами допустимого диапазона", "last");                    
+                throw new ArgumentException("Значение за пределами допустимого диапазона", "last");
 
+            List<SteamGame> games = context.SteamGames.ToList();
             List<SteamGame> result = new List<SteamGame>(last - first + 1);
             for (int i = first; i <= last; i++)
-                result.Add(context.SteamGames.ElementAt(i));
+                result.Add(games.ElementAt(i));
 
             return result;
         }
