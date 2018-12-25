@@ -15,6 +15,8 @@ namespace SteamCardsFarmer.ViewModel {
         private SteamShopAPI shopAPI;
         private string gameMaxPrice;
         private double mxGamePrice;
+        private int gameMaxIndex;
+        private List<SteamGame> gamesList;
 
         /// <summary>Свойство работает с максимальной ценой, устанавливаемой пользователем</summary>
         public string GameMaxPrice
@@ -30,55 +32,89 @@ namespace SteamCardsFarmer.ViewModel {
         /// <summary>Свойство возвращает список с играми</summary>
         public List<SteamGame> Games
         {
-            get
+            get => gamesList;
+            private set
             {
-                if (marketAPI != null) return /*marketAPI.GetGamesWithCards()*/null;
-                else return null;
-            }
-        }
-
-        /// <summary>Свойство возвращает строку "Шанс: ", если это возможно</summary>
-        public string ChanceString
-        {
-            get
-            {
-                if (marketAPI == null) return null;
-                else return "Шанс: ";
+                gamesList = value;
+                OnPropertyChanged("Games");
             }
         }
 
         /// <summary>Конструктор класса, инициализирующий элементы</summary>
         public MainViewModel()
         {
-            gameMaxPrice = ""; mxGamePrice = 0;
+            gameMaxPrice = ""; mxGamePrice = 0; gameMaxIndex = 0;
             shopAPI = new SteamShopAPI();
             FetchGamesCommand = new DelegateCommand(FetchGames, CanFetchGames);
+            NextPageCommand = new DelegateCommand(IncreaseIndex, CanIncreaseIndex);
+            PrevPageCommand = new DelegateCommand(DecreaseIndex, CanDecreaseIndex);
+            GetCardsCommand = new DelegateCommand(GetCards, CanGetCards);
         }
 
         #region Commands
         
-        /// <summary>Метод для ивлечения игр из магазина</summary>
+        /// <summary>Метод для извлечения игр из магазина</summary>
         /// <param name="obj">Объект, который вызывает процедуру</param>
         private void FetchGames(object obj)
         {
             mxGamePrice = Convert.ToDouble(gameMaxPrice);
-            shopAPI.ReloadGamesDB(mxGamePrice);
-            //marketAPI = new SteamMarketAPI(shopAPI.GetGames());
-            Comparison<SteamGame> gamesComparison = (firstGame, secondGame) => string.Compare(firstGame.Title, secondGame.Title);
-            //marketAPI.Games.Sort(gamesComparison);
-            //marketAPI.WeedOutGames();
-            OnPropertyChanged("Games");
+            if (shopAPI.MaxPriceInDB() < mxGamePrice) shopAPI.ReloadGamesDB(mxGamePrice);
+            gameMaxIndex = shopAPI.GamesCount() > 9 ? 9 : shopAPI.GamesCount() - 1;
+            marketAPI = new SteamMarketAPI();
+            Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+        }
+
+        private void IncreaseIndex(object arg)
+        {
+            gameMaxIndex += gameMaxIndex + 10 <= shopAPI.GamesCount() ? 10 : shopAPI.GamesCount() - gameMaxIndex;
+            Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+        }
+
+        private void DecreaseIndex(object arg)
+        {
+            gameMaxIndex -= gameMaxIndex - 10 >= 9 ? 10 : 10 - gameMaxIndex;
+            Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+        }
+
+        private void GetCards(object arg)
+        {
+            Games = marketAPI.GetGamesWithCardsInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
         }
 
         /// <summary>Метод проверяет, можно ли извлечь игры</summary>
         /// <param name="arg">Объект, который вызывает процедуру</param>
         private bool CanFetchGames(object arg) => shopAPI != null && mxGamePrice >= 0 && IsValid ? true : false;
 
+        private bool CanIncreaseIndex(object arg) => shopAPI != null && gameMaxIndex < shopAPI.GamesCount() && Games != null;
+
+        public bool CanDecreaseIndex(object arg) => shopAPI != null && gameMaxIndex > 9 && shopAPI.GamesCount() > 0;
+
+        public bool CanGetCards(object arg) => marketAPI != null;
+
         public ICommand FetchGamesCommand
         {
             get;
             private set;
         }
+
+        public ICommand NextPageCommand
+        {
+            get;
+            private set;
+        }
+
+        public ICommand PrevPageCommand
+        {
+            get;
+            private set;
+        }
+
+        public ICommand GetCardsCommand
+        {
+            get;
+            private set;
+        }
+        
         #endregion
 
         #region Validation

@@ -10,7 +10,7 @@
     <Grid Margin="5, 5, 5, 5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.Resources>
             <Style TargetType="Border">
-                <Setter Property="Padding" Value="2.5, 2.5, 2.5, 2.5"/>
+                <Setter Property="Padding" Value="2.5"/>
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -27,7 +27,7 @@
         <Border Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">
             <TextBox x:Name="GamePriceTextBox" TextWrapping="NoWrap" Text="{Binding GameMaxPrice, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Height="Auto" MinHeight="28" Width="74"/>
         </Border>
-        <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,31">
             <ListBox x:Name="GamesListBox" ItemsSource="{Binding Games}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -37,40 +37,54 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Padding="1">
-                                <Image Width="53.6" Height="25" Source="{Binding Game.ImageUrl}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                <Image Width="53.6" Height="25" Source="{Binding ImageUrl}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             </Border>
                             <Border Grid.Column="1" Padding="1">
-                                <TextBlock FontSize="12" FontWeight="Normal" Text="{Binding Game.Title}" VerticalAlignment="Center"/>
+                                <TextBlock FontSize="12" FontWeight="Normal" Text="{Binding Title}" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Border>
+        <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Button x:Name="PrevPageButton" MinWidth="37" Height="Auto" MinHeight="28" Content="&lt;" Command="{Binding PrevPageCommand}"/>
+        </Border>
+        <Border  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button x:Name="FetchCardsButton" MinWidth="223" Height="Auto" MinHeight="28" Content="Получить карты" Command="{Binding GetCardsCommand}"/>
+        </Border>
+        <Border Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button x:Name="NextPageButton" MinWidth="37" Height="Auto" MinHeight="28" Content="&gt;" Command="{Binding NextPageCommand}"/>
+        </Border>
         <Border Grid.Column="1" Grid.Row="0">
             <Button x:Name="FetchGamesButton" Height="Auto" MinHeight="28" VerticalAlignment="Center" Content="Выбрать игры" Command="{Binding FetchGamesCommand}"/>
         </Border>
-        <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Padding="0, 0, 0, 0">
+        <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Padding="0">
             <StackPanel DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}" Orientation="Vertical" HorizontalAlignment="Stretch">
                 <Border>
-                    <Image x:Name="GameImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Source="{Binding Game.ImageUrl}"/>
+                    <Image x:Name="GameImage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Source="{Binding ImageUrl}"/>
                 </Border>
                 <Border>
                     <Label x:Name="GameTitleLabel" HorizontalAlignment="Stretch" Height="28">
-                        <Hyperlink NavigateUri="{Binding Game.Link}" RequestNavigate="Hyperlink_RequestNavigate">
-                            <TextBlock Text="{Binding Game.Title}"/>
-                        </Hyperlink>
+                            <TextBlock Text="{c:Binding \'Название: \' + Title}"/>
                     </Label>
                 </Border>
                 <Border>
-                    <Label x:Name="GamePriceLabel" Content="{Binding Game.Price}" HorizontalAlignment="Stretch" Height="28"/>
+                    <Label x:Name="GamePriceLabel" Content="{c:Binding \'Цена: \' + Price + \'₽\'}" HorizontalAlignment="Stretch" Height="28"/>
+                </Border>
+                <Border>
+                    <Label x:Name="GoToStoreLabel" HorizontalAlignment="Stretch" Height="28" Visibility="{c:Binding ElementName = GamesListBox, Path = 'SelectedIndex != -1' }">
+                        <Hyperlink NavigateUri="{Binding Link}" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="Перейти в магазин"/>
+                        </Hyperlink>
+                    </Label>
                 </Border>
             </StackPanel>
         </Border>
-        <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Padding="0, 0, 0, 0">
-            <StackPanel>
+        <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Padding="0">
+            <StackPanel DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}">
                 <Border>
-                    <Label x:Name="ChanceLabel" Height="91" FontWeight="Bold" FontSize="40" Content="{c:Binding 'ChanceString + ChanceToPayOff + %'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="{c:Binding ElementName=GamesListBox, Path='SelectedIndex != -1' }"/>
+                    <Label x:Name="ChanceLabel" Height="91" FontWeight="Bold" FontSize="40" Content="{c:Binding \'Шанс: \' + ChanceToPayOff * 10 + \'%\'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="{c:Binding ElementName = GamesListBox, Path = 'SelectedIndex != -1' }"/>
                 </Border>
             </StackPanel>
         </Border>
