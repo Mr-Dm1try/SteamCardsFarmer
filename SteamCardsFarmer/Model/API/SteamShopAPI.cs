@@ -14,6 +14,9 @@ namespace SteamCardsFarmer.Model.API {
         private readonly string baseUrl = "https://store.steampowered.com/search/?sort_by=Price_ASC&category1=998&category2=29";
         private readonly string baseImageUrl = "https://steamcdn-a.akamaihd.net/steam/apps/*gameID*/header.jpg";
 
+        /// <summary> Событие обработки новой игры парсером </summary>
+        public event Action<String> FoundNewGame;
+
         /// <summary>Конструктор класса. В нем создается экземпляр класса контекста БД для игр.</summary>
         public SteamShopAPI() => context = new SteamGamesContext();
 
@@ -31,6 +34,7 @@ namespace SteamCardsFarmer.Model.API {
 
         /// <summary> Получение игр </summary>
         /// <returns> Возвращает лист игр из таблицы SSGames </returns>
+        [Obsolete("По возможности используйте GetGamesInRange")]
         public List<SteamGame> GetGames() {
             if (GamesCount() > 0)
                 return context.SteamGames.ToList();
@@ -73,9 +77,10 @@ namespace SteamCardsFarmer.Model.API {
 
             using (var client = new WebClient()) {
                 double currPrice = 0;
-                do {
-                    try
-                    {
+                
+                try
+                {
+                    do {
                         var html = client.DownloadString(url);
                         var document = new HtmlDocument();
                         document.LoadHtml(html);
@@ -117,26 +122,27 @@ namespace SteamCardsFarmer.Model.API {
                             try
                             {
                                 games.Add(game.Title, game);
+                                FoundNewGame?.Invoke("Новая обработанная игра: " + game.Title);
                             }
                             catch (ArgumentException)
                             {
                                 continue;
                             }
                         }
-                    }
-                    catch (WebException e)
-                    {
-                        throw new WebException("Нет доступа к ресурсу, проверьте подключение к интернету.");
-                    }
-                    
-                    var nextPageButtons = document.DocumentNode.SelectNodes(@"//div[@class = 'search_pagination_right']/a[@class = 'pagebtn']");
-                    foreach (var button in nextPageButtons)
-                        if (button.InnerText == "&gt;")         //знак >
-                            url = button.GetAttributeValue(@"href", "error");
-                        else
-                            url = "end";
 
-                } while (currPrice <= maxPrice && url != "end");
+                        var nextPageButtons = document.DocumentNode.SelectNodes(@"//div[@class = 'search_pagination_right']/a[@class = 'pagebtn']");
+                        foreach (var button in nextPageButtons)
+                            if (button.InnerText == "&gt;")         //знак >
+                                url = button.GetAttributeValue(@"href", "error");
+                            else
+                                url = "end";
+                    } while (currPrice <= maxPrice && url != "end");
+                }
+                catch (WebException e)
+                {
+                    throw new WebException("Нет доступа к ресурсу, проверьте подключение к интернету.");
+                }      
+                
             }           
             
             return games;

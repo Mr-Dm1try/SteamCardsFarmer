@@ -23,6 +23,9 @@ namespace SteamCardsFarmer.Model.API {
 
         private DbSet<SteamGame> _games;
 
+        /// <summary> Событие обработки игры просеивателем </summary>
+        public event Action<String> GameHasBeenWeededOut;
+
         /// <summary>Конструктор класса. Задает связи с базой данных.</summary>
         public SteamMarketAPI() {
             context = new SteamGamesContext();
@@ -53,19 +56,24 @@ namespace SteamCardsFarmer.Model.API {
             return result;        
         }
 
-        /// <summary>Возвращает количество игр.</summary>
+        /// <summary>Возвращает количество игр.</summary>        
         public int GamesCount() {
             return context.SteamGames.Count();
         }
 
-        /// <summary>Получить карточки для игр и рассчитать шанс на окупаемость</summary>
+        /// <summary>Получить карточки для игры и рассчитать ее шанс на окупаемость</summary>
         /// <param name="game">Обрабатываемая игра</param>
         private void WeedOutGame(SteamGame game) {
             
             List<double> cardPrices = GetCardPrices(game, out int cardsCount);
 
+            if (cardPrices.Count == 0) {                // если карт нет - значит что-то пошло не так. Мы не должны об этом умалчивать
+                GameHasBeenWeededOut?.Invoke($"Карты для игры {game.Title} не были найдены");
+                return;
+            }
+
             double sumOfAdditionalCards = (cardsCount != cardPrices.Count) ? (cardsCount - cardPrices.Count) * cardPrices.Last() : 0;
-            double cardsAvgPrice = cardPrices.Sum() + sumOfAdditionalCards;     // если карт нет - значит что-то пошло не так. Мы не должны об этом умалчивать
+            double cardsAvgPrice = cardPrices.Sum() + sumOfAdditionalCards;     
 
             double chanceToPayOff = GetChanceToPayOff(game.Price, cardPrices, cardsCount);
 
@@ -75,9 +83,10 @@ namespace SteamCardsFarmer.Model.API {
             game.HasCards = true;
                         
             context.SaveChanges();
+            GameHasBeenWeededOut?.Invoke($"Игра {game.Title} обработана");
         }
 
-        /// <summary>Возвращает шанс окупиться для игры.</summary>
+        /// <summary>Возвращает шанс окупаемости игры</summary>
         /// <param name="gamePrice">Цена игры</param>
         /// <param name="cardPrices">Цены карточек</param>
         /// <param name="cardsCount">Количество карточек</param>
@@ -102,12 +111,13 @@ namespace SteamCardsFarmer.Model.API {
             return (double)positiveCases / allPossibleCases;                        //Вероятность удачного исхода
         }
 
-        /// <summary>Алгоритм возвращает true, если дальнейшие вычисления целесообразны, и false в ином случае</summary>
+        /// <summary>Перебор в лоб с некоторыми улучшениями</summary>
         /// <param name="gamePrice">Цена игры</param>
         /// <param name="cardPrices">Цены карточек</param>
-        /// <param name="usesCount">Количество использований для каждой карты</param>
+        /// <param name="usesCount">Массив количества использованных выпадений каждой карточки</param>
         /// <param name="dropCardsCount">Число выпавших карточек</param>
-        /// <param name="positiveCases">Сумма всех возможных размещений с положительными исходами (возвращаемый параметр)</param>
+        /// <param name="positiveCases">Количество положительных исходов</param>
+        /// <returns>Алгоритм возвращает true, если дальнейшие вычисления целесообразны, и false в ином случае</returns>
         private bool BruteForce(double gamePrice, List<double> cardPrices, int[] usesCount, int dropCardsCount, ref int positiveCases) {
             int depth = usesCount.Sum();                                            //Количество использованных карточек
 
@@ -143,7 +153,7 @@ namespace SteamCardsFarmer.Model.API {
                 throw new Exception("Unexpected error! Something went wrong!");
         }
 
-        /// <summary>Позволяет рассчитать сумму всех возможных размещений с положительными исходами</summary>
+        /// <summary>Неполный факториал (N! - K!)</summary>
         /// <param name="K">Нижняя граница</param>
         /// <param name="N">Верхняя граница</param>
         private int Arrangement(int K, int N) {
