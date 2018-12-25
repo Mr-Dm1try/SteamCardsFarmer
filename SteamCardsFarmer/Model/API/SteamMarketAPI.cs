@@ -23,6 +23,7 @@ namespace SteamCardsFarmer.Model.API {
 
         private DbSet<SteamGame> _games;
 
+        /// <summary> Событие обработки игры просеивателем </summary>
         public event Action<String> GameHasBeenWeededOut;
 
         /// <summary>Конструктор класса. Задает связи с базой данных.</summary>
