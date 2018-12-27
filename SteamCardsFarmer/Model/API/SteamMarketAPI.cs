@@ -75,7 +75,7 @@ namespace SteamCardsFarmer.Model.API {
             double sumOfAdditionalCards = (cardsCount != cardPrices.Count) ? (cardsCount - cardPrices.Count) * cardPrices.Last() : 0;
             double cardsAvgPrice = cardPrices.Sum() + sumOfAdditionalCards;     
 
-            double chanceToPayOff = GetChanceToPayOff(game.Price, cardPrices, cardsCount);
+            double chanceToPayOff = Math.Round(GetChanceToPayOff(game.Price, cardPrices, cardsCount), 3);
 
             game.CardsCount = cardsCount;
             game.CardsAveragePrice = cardsAvgPrice;
