@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows;
+using System.Net;
 
 using SteamCardsFarmer.Model.API;
 using SteamCardsFarmer.Model.Types;
@@ -57,11 +59,18 @@ namespace SteamCardsFarmer.ViewModel {
         /// <param name="obj">Объект, который вызывает процедуру</param>
         private void FetchGames(object obj)
         {
-            mxGamePrice = Convert.ToDouble(gameMaxPrice);
-            if (shopAPI.MaxPriceInDB() < mxGamePrice) shopAPI.ReloadGamesDB(mxGamePrice);
-            gameMaxIndex = shopAPI.GamesCount() > 9 ? 9 : shopAPI.GamesCount() - 1;
-            marketAPI = new SteamMarketAPI();
-            Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+            try
+            {
+                mxGamePrice = Convert.ToDouble(gameMaxPrice);
+                if (shopAPI.MaxPriceInDB() < mxGamePrice) shopAPI.ReloadGamesDB(mxGamePrice);
+                gameMaxIndex = shopAPI.GamesCount() > 9 ? 9 : shopAPI.GamesCount() - 1;
+                marketAPI = new SteamMarketAPI();
+                Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+            }
+            catch (WebException e)
+            {
+                MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>Метод для увеличения максимального индекса отображаемой части списка игр</summary>
@@ -84,7 +93,14 @@ namespace SteamCardsFarmer.ViewModel {
         /// <param name="obj">Объект, который вызывает процедуру</param>
         private void GetCards(object arg)
         {
-            Games = marketAPI.GetGamesWithCardsInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+            try
+            {
+                Games = marketAPI.GetGamesWithCardsInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);
+            }
+            catch (WebException e)
+            {
+                MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>Метод проверяет, можно ли извлечь игры</summary>

@@ -84,7 +84,7 @@
         <Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Padding="0">
             <StackPanel DataContext="{Binding ElementName = GamesListBox, Path = SelectedItem}">
                 <Border>
-                    <Label x:Name="ChanceLabel" Height="91" FontWeight="Bold" FontSize="40" Content="{c:Binding \'Шанс: \' + ChanceToPayOff * 10 + \'%\'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="{c:Binding ElementName = GamesListBox, Path = 'SelectedIndex != -1' }"/>
+                    <Label x:Name="ChanceLabel" Height="91" FontWeight="Bold" FontSize="40" Content="{c:Binding \'Шанс: \' + ChanceToPayOff * 100 + \'%\'}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Visibility="{c:Binding ElementName = GamesListBox, Path = 'SelectedIndex != -1' }"/>
                 </Border>
             </StackPanel>
         </Border>
