@@ -62,7 +62,8 @@ namespace SteamCardsFarmer.ViewModel {
             try
             {
                 mxGamePrice = Convert.ToDouble(gameMaxPrice);
-                if (shopAPI.MaxPriceInDB() < mxGamePrice) shopAPI.ReloadGamesDB(mxGamePrice);
+                if (shopAPI.MaxPriceInDB() < mxGamePrice || mxGamePrice <= 0) 
+                    shopAPI.ReloadGamesDB(mxGamePrice);
                 gameMaxIndex = shopAPI.GamesCount() > 9 ? 9 : shopAPI.GamesCount() - 1;
                 marketAPI = new SteamMarketAPI();
                 Games = shopAPI.GetGamesInRange(gameMaxIndex - (gameMaxIndex >= 9 ? 9 : gameMaxIndex), gameMaxIndex);

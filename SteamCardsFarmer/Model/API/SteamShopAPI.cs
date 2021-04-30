@@ -32,8 +32,8 @@ namespace SteamCardsFarmer.Model.API {
         /// <summary> Обновление таблицы с играми в БД </summary>
         /// <param name="maxPrice"> Максимальная цена, до которой ищутся игры </param>
         public void ReloadGamesDB(double maxPrice) {
-            foreach (var entity in context.SteamGames.ToList())                 //очищаем БД
-                context.SteamGames.Remove(entity);            
+            var list = context.SteamGames.ToList();
+            context.SteamGames.RemoveRange(list);
 
             foreach (var game in SteamShopParse(maxPrice))
                 context.SteamGames.Add(game.Value);
@@ -95,9 +95,9 @@ namespace SteamCardsFarmer.Model.API {
                         var document = new HtmlDocument();
                         document.LoadHtml(html);
 
-                        var gameNodes = document.DocumentNode.SelectNodes(@"//div[@id = 'search_results']/div[@id = 'search_result_container']/div[2]/a");
-                        if (gameNodes == null)  // For what?
-                            continue;
+                        var gameNodes = document.DocumentNode.SelectNodes(@"//div[@id = 'search_resultsRows']/a");
+                        if (gameNodes == null)
+                            break;
 
                         foreach (var node in gameNodes)
                         {
